@@ -1,0 +1,7 @@
+/build
+.idea
+.
+*.db
+mqproxy.json
+.env
+config
