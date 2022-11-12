@@ -6,3 +6,4 @@ mqproxy.json
 .env
 config
 build
+.DS_Store
