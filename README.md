@@ -1,2 +1,2 @@
-# static-auth
+# Auth0 Serve
 
