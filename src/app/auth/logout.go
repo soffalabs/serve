@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -29,7 +28,7 @@ func LogoutHandler(ctx *gin.Context) {
 	}
 
 	parameters := url.Values{}
-	parameters.Add("returnTo", fmt.Sprintf("%s/auth", returnTo.String()))
+	parameters.Add("returnTo", returnTo.String())
 	parameters.Add("client_id", os.Getenv("AUTH0_CLIENT_ID"))
 	logoutUrl.RawQuery = parameters.Encode()
 

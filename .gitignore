@@ -3,7 +3,7 @@
 .
 *.db
 mqproxy.json
-.env
+src/.env
 config
 build
 .DS_Store

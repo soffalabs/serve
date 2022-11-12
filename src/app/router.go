@@ -13,9 +13,14 @@ import (
 )
 
 func IsAuthenticated(ctx *gin.Context) {
+	path := ctx.FullPath()
+	if strings.HasPrefix(path, "/static/") {
+		ctx.Next()
+		return
+	}
 	profile := sessions.Default(ctx).Get("profile")
 	if profile == nil {
-		ctx.Redirect(http.StatusSeeOther, "/auth")
+		ctx.Redirect(http.StatusSeeOther, "/home")
 	} else {
 		ctx.Next()
 	}
@@ -25,7 +30,7 @@ func IsAuthenticated(ctx *gin.Context) {
 func NewRouter(directory string, authenticator *auth.Authenticator) *gin.Engine {
 	// gin.ReleaseMode = "true"
 	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
+	router := gin.New()
 
 	// To store custom types in our cookies,
 	// we must first register them using gob.Register
@@ -33,11 +38,9 @@ func NewRouter(directory string, authenticator *auth.Authenticator) *gin.Engine 
 
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("auth-session", store))
-	router.LoadHTMLGlob("template/*")
 
-	router.GET("/auth", func(ctx *gin.Context) {
-		ctx.HTML(http.StatusOK, "login.html", nil)
-	})
+	router.StaticFile("/home", fmt.Sprintf("%s/static/home.html", directory))
+
 	router.GET("/login", auth.LoginHandler(authenticator))
 	router.GET("/callback", auth.CallbackHandler(authenticator))
 
